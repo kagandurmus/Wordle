@@ -6,9 +6,8 @@ import HelpModal from '../components/HelpModal';
 import StatsModal from '../components/StatsModal';
 import SettingsModal from '../components/SettingsModal';
 import Toast from '../components/Toast';
-import { getTodaysWord, isValidWord } from '../data/mock';
+import { getRandomWord, isValidWord } from '../data/mock';
 
-const STORAGE_KEY = 'wordle-game-state';
 const STATS_KEY = 'wordle-stats';
 
 const getInitialStats = () => {
@@ -41,37 +40,22 @@ const HomePage = () => {
     highContrast: false
   });
   const [toast, setToast] = useState({ message: '', visible: false });
+  const [gameNumber, setGameNumber] = useState(1);
 
-  // Initialize game
-  useEffect(() => {
-    const word = getTodaysWord();
+  // Initialize game with random word
+  const startNewGame = useCallback(() => {
+    const word = getRandomWord();
     setTargetWord(word);
-    
-    // Load saved game state
-    const savedState = localStorage.getItem(STORAGE_KEY);
-    if (savedState) {
-      const { guesses: savedGuesses, targetWord: savedTarget, gameState: savedGameState, date } = JSON.parse(savedState);
-      const today = new Date().toDateString();
-      
-      if (date === today && savedTarget === word) {
-        setGuesses(savedGuesses);
-        setGameState(savedGameState);
-        updateLetterStatuses(savedGuesses, word);
-      }
-    }
+    setGuesses([]);
+    setCurrentGuess('');
+    setGameState('playing');
+    setLetterStatuses({});
   }, []);
 
-  // Save game state
+  // Initialize first game
   useEffect(() => {
-    if (targetWord) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        guesses,
-        targetWord,
-        gameState,
-        date: new Date().toDateString()
-      }));
-    }
-  }, [guesses, targetWord, gameState]);
+    startNewGame();
+  }, [startNewGame]);
 
   // Save stats
   useEffect(() => {
@@ -144,7 +128,12 @@ const HomePage = () => {
           }
         };
         setStats(newStats);
-        setTimeout(() => setShowStats(true), 1500);
+        showToast('🎉 Correct! Starting new game...', 2000);
+        // Start new game after a short delay
+        setTimeout(() => {
+          setGameNumber(prev => prev + 1);
+          startNewGame();
+        }, 2500);
       } else if (newGuesses.length >= 6) {
         setGameState('lost');
         const newStats = {
@@ -153,15 +142,19 @@ const HomePage = () => {
           currentStreak: 0
         };
         setStats(newStats);
-        showToast(targetWord, 3000);
-        setTimeout(() => setShowStats(true), 2000);
+        showToast(`The word was: ${targetWord}`, 3000);
+        // Start new game after showing the answer
+        setTimeout(() => {
+          setGameNumber(prev => prev + 1);
+          startNewGame();
+        }, 3500);
       }
     } else if (key === 'BACKSPACE') {
       setCurrentGuess(prev => prev.slice(0, -1));
     } else if (currentGuess.length < 5 && /^[A-Z]$/.test(key)) {
       setCurrentGuess(prev => prev + key);
     }
-  }, [currentGuess, guesses, gameState, targetWord, stats]);
+  }, [currentGuess, guesses, gameState, targetWord, stats, startNewGame]);
 
   // Handle physical keyboard
   useEffect(() => {
