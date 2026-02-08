@@ -1,25 +1,56 @@
-/* Wordle Game Styles */
+/* Wordle Game Styles - Enhanced */
 
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&family=Noto+Serif:wght@700&display=swap');
+
+/* ===== BASE STYLES ===== */
+* {
+  box-sizing: border-box;
+}
 
 body {
   font-family: 'Libre Franklin', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 .App {
   min-height: 100vh;
-  background-color: #121213;
+  background: linear-gradient(135deg, #0a0a0b 0%, #121213 50%, #1a1a1b 100%);
+  position: relative;
 }
 
-/* Pop animation for letters */
+/* Subtle animated background gradient */
+.App::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(83, 141, 78, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(181, 159, 59, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+/* ===== TILE ANIMATIONS ===== */
+
+/* Pop animation for letters - Enhanced */
 @keyframes pop {
   0% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(1.15);
   }
   100% {
     transform: scale(1);
@@ -27,53 +58,63 @@ body {
 }
 
 .animate-pop {
-  animation: pop 0.1s ease-in-out;
+  animation: pop 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Flip animation for revealing */
+/* Flip animation for revealing - Smoother */
 @keyframes flip {
   0% {
     transform: rotateX(0deg);
+    opacity: 1;
+  }
+  49% {
+    opacity: 0.9;
   }
   50% {
     transform: rotateX(90deg);
+    opacity: 0.8;
+  }
+  51% {
+    opacity: 0.9;
   }
   100% {
     transform: rotateX(0deg);
+    opacity: 1;
   }
 }
 
 .animate-flip {
-  animation: flip 0.5s ease-in-out;
+  animation: flip 0.6s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  transform-style: preserve-3d;
 }
 
-/* Shake animation for invalid word */
+/* Shake animation for invalid word - More dynamic */
 @keyframes shake {
   0%, 100% {
     transform: translateX(0);
   }
   10%, 30%, 50%, 70%, 90% {
-    transform: translateX(-5px);
+    transform: translateX(-8px);
   }
   20%, 40%, 60%, 80% {
-    transform: translateX(5px);
+    transform: translateX(8px);
   }
 }
 
 .animate-shake {
-  animation: shake 0.5s ease-in-out;
+  animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
-/* Bounce animation for win */
+/* Bounce animation for win - More celebratory */
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
+  0%, 20%, 53%, 80%, 100% {
+    transform: translateY(0) scale(1);
   }
   40% {
-    transform: translateY(-30px);
+    transform: translateY(-30px) scale(1.1);
   }
-  60% {
-    transform: translateY(-15px);
+  70% {
+    transform: translateY(-15px) scale(1.05);
   }
 }
 
@@ -81,36 +122,275 @@ body {
   animation: bounce 1s ease;
 }
 
-/* High contrast mode */
-.high-contrast .bg-\[#538d4e\] {
+/* ===== NEW ANIMATIONS ===== */
+
+/* Fade in animation for modals */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Slide up animation for toasts/notifications */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Pulse animation for buttons/badges */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Glow effect for correct tiles */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(83, 141, 78, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(83, 141, 78, 0.8), 0 0 30px rgba(83, 141, 78, 0.4);
+  }
+}
+
+.animate-glow {
+  animation: glow 1.5s ease-in-out infinite;
+}
+
+/* Spin animation for loading states */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* ===== TILE STATES WITH TRANSITIONS ===== */
+
+.tile {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tile:hover {
+  transform: scale(1.02);
+}
+
+.tile.correct {
+  background-color: #538d4e;
+  border-color: #538d4e;
+  color: white;
+  box-shadow: 0 2px 8px rgba(83, 141, 78, 0.3);
+}
+
+.tile.present {
+  background-color: #b59f3b;
+  border-color: #b59f3b;
+  color: white;
+  box-shadow: 0 2px 8px rgba(181, 159, 59, 0.3);
+}
+
+.tile.absent {
+  background-color: #3a3a3c;
+  border-color: #3a3a3c;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+
+.high-contrast .bg-\[#538d4e\],
+.high-contrast .tile.correct {
   background-color: #f5793a !important;
   border-color: #f5793a !important;
+  box-shadow: 0 2px 8px rgba(245, 121, 58, 0.4) !important;
 }
 
-.high-contrast .bg-\[#b59f3b\] {
+.high-contrast .bg-\[#b59f3b\],
+.high-contrast .tile.present {
   background-color: #85c0f9 !important;
   border-color: #85c0f9 !important;
+  box-shadow: 0 2px 8px rgba(133, 192, 249, 0.4) !important;
 }
 
-/* Font override for header */
+/* ===== KEYBOARD ENHANCEMENTS ===== */
+
+.keyboard-button {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.keyboard-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s, height 0.4s;
+}
+
+.keyboard-button:active::before {
+  width: 200%;
+  height: 200%;
+}
+
+.keyboard-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.keyboard-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== MODAL ENHANCEMENTS ===== */
+
+.modal-overlay {
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 0.3s ease;
+}
+
+.modal-content {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ===== HEADER STYLES ===== */
+
 h1 {
   font-family: 'Noto Serif', serif !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: letter-spacing 0.3s ease;
 }
 
-/* Scrollbar styling */
+/* ===== SCROLLBAR STYLING ===== */
+
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
   background: #121213;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3a3a3c;
-  border-radius: 4px;
+  background: linear-gradient(180deg, #3a3a3c 0%, #565758 100%);
+  border-radius: 10px;
+  border: 2px solid #121213;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #565758;
+  background: linear-gradient(180deg, #565758 0%, #6a6b6c 100%);
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.shadow-elevation-1 {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-elevation-2 {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.shadow-elevation-3 {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== LOADING STATES ===== */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #1a1a1b 25%,
+    #2a2a2b 50%,
+    #1a1a1b 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ===== RESPONSIVE REFINEMENTS ===== */
+
+@media (max-width: 640px) {
+  .App::before {
+    animation: none; /* Reduce animations on mobile for performance */
+  }
+}
+
+/* ===== FOCUS STATES (Accessibility) ===== */
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #538d4e;
+  outline-offset: 2px;
+}
+
+/* ===== REDUCED MOTION ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
