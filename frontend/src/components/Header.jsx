@@ -16,7 +16,7 @@ const Header = ({ onHelpClick, onStatsClick, onSettingsClick }) => {
         </div>
         
         <h1 className="text-[32px] font-bold text-white tracking-[0.1em] font-serif">
-          Wordle Unlimited
+          Because One Puzzle a Day Is Never Enough
         </h1>
         
         <div className="flex items-center gap-4">
