@@ -15,7 +15,7 @@ const Header = ({ onHelpClick, onStatsClick, onSettingsClick }) => {
           </button>
         </div>
         
-        <h1 className="text-[32px] font-bold text-white tracking-[0.1em] font-serif">
+        <h1 className="text-[16px] font-bold text-white tracking-[0.1em] font-serif">
           Because One Puzzle a Day Is Never Enough
         </h1>
         
