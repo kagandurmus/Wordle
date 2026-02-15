@@ -21,6 +21,7 @@ const Keyboard = ({ onKeyPress, letterStatuses }) => {
     return 'bg-[#818384] text-white hover:bg-[#a0a1a2]';
   };
 
+
   return (
     <div className="flex flex-col gap-2 items-center w-full max-w-[500px] px-2">
       {rows.map((row, rowIndex) => (
@@ -30,15 +31,18 @@ const Keyboard = ({ onKeyPress, letterStatuses }) => {
               key={key}
               onClick={() => onKeyPress(key)}
               className={`
-                ${key === 'ENTER' || key === 'BACKSPACE' ? 'px-3 min-w-[65px]' : 'min-w-[43px]'}
-                h-[58px] rounded-[4px] font-bold text-[13px]
+                ${key === 'ENTER' || key === 'BACKSPACE' 
+                  ? 'flex-[1.5] min-w-0 max-w-[65px] px-1 text-[11px] xs:text-[13px]' 
+                  : 'flex-1 min-w-0 max-w-[43px]'
+                }
+                h-[58px] sm:h-[58px] xs:h-[52px] rounded-[4px] font-bold text-[13px] xs:text-[12px]
                 flex items-center justify-center
                 transition-colors duration-100
                 select-none cursor-pointer
                 ${getKeyStyle(key)}
               `}
             >
-              {key === 'BACKSPACE' ? <Delete size={20} /> : key}
+              {key === 'BACKSPACE' ? <Delete size={20} className="xs:w-[18px] xs:h-[18px]" /> : key}
             </button>
           ))}
         </div>
