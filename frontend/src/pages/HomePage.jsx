@@ -8,7 +8,9 @@ import SettingsModal from '../components/SettingsModal';
 import Toast from '../components/Toast';
 import { getRandomWord, isValidWord } from '../data/mock';
 
+
 const STATS_KEY = 'wordle-stats';
+
 
 const getInitialStats = () => {
   const saved = localStorage.getItem(STATS_KEY);
@@ -23,6 +25,7 @@ const getInitialStats = () => {
     guessDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }
   };
 };
+
 
 const HomePage = () => {
   const [targetWord, setTargetWord] = useState('');
@@ -42,6 +45,7 @@ const HomePage = () => {
   const [toast, setToast] = useState({ message: '', visible: false });
   const [gameNumber, setGameNumber] = useState(1);
 
+
   // Initialize game with random word
   const startNewGame = useCallback(() => {
     const word = getRandomWord();
@@ -52,15 +56,18 @@ const HomePage = () => {
     setLetterStatuses({});
   }, []);
 
+
   // Initialize first game
   useEffect(() => {
     startNewGame();
   }, [startNewGame]);
 
+
   // Save stats
   useEffect(() => {
     localStorage.setItem(STATS_KEY, JSON.stringify(stats));
   }, [stats]);
+
 
   const showToast = (message, duration = 1500) => {
     setToast({ message, visible: true });
@@ -68,6 +75,7 @@ const HomePage = () => {
       setToast({ message: '', visible: false });
     }, duration);
   };
+
 
   const updateLetterStatuses = (allGuesses, target) => {
     const newStatuses = {};
@@ -93,6 +101,7 @@ const HomePage = () => {
     
     setLetterStatuses(newStatuses);
   };
+
 
   const handleKeyPress = useCallback((key) => {
     if (gameState !== 'playing') return;
@@ -156,6 +165,7 @@ const HomePage = () => {
     }
   }, [currentGuess, guesses, gameState, targetWord, stats, startNewGame]);
 
+
   // Handle physical keyboard
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -174,6 +184,7 @@ const HomePage = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyPress]);
 
+
   const handleSettingChange = (setting, value) => {
     setSettings(prev => ({ ...prev, [setting]: value }));
   };
@@ -186,21 +197,20 @@ const HomePage = () => {
         onSettingsClick={() => setShowSettings(true)}
       />
       
-      <main className="flex-1 flex flex-col items-center justify-between py-4 px-2">
-        <div className="flex-1 flex items-center">
-          <GameBoard
-            guesses={guesses}
-            currentGuess={currentGuess}
-            targetWord={targetWord}
-            currentRow={guesses.length}
-          />
-        </div>
+      <main className="flex-1 flex flex-col items-center justify-center gap-2 sm:gap-4 px-2 py-2 sm:py-4">
+        <GameBoard
+          guesses={guesses}
+          currentGuess={currentGuess}
+          targetWord={targetWord}
+          currentRow={guesses.length}
+        />
         
         <Keyboard
           onKeyPress={handleKeyPress}
           letterStatuses={letterStatuses}
         />
       </main>
+
       
       <Toast message={toast.message} isVisible={toast.visible} />
       
