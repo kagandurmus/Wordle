@@ -197,7 +197,7 @@ const HomePage = () => {
         onSettingsClick={() => setShowSettings(true)}
       />
       
-      <main className="flex-1 flex flex-col items-center justify-center gap-2 sm:gap-4 px-2 pb-2 sm:pb-4">
+      <main className="flex-1 flex flex-col items-center justify-start gap-2 sm:gap-4 px-2 pt-1 pb-2 sm:pt-2 sm:pb-4">
         <GameBoard
           guesses={guesses}
           currentGuess={currentGuess}
@@ -210,6 +210,7 @@ const HomePage = () => {
           letterStatuses={letterStatuses}
         />
       </main>
+
 
       
       <Toast message={toast.message} isVisible={toast.visible} />
